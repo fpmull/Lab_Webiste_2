@@ -33,7 +33,22 @@ var players = [{name:"John Doe", img: "../resources/img/player1.jpg", alt:"Image
 					 To reveal the html tag (toggle - 1), the visibility will be set to visible and
 					 the height will be set to auto.
 */
-				
+function viewStudentStats(id, toggle) {
+	var visibility = document.getElementById(id).style.visibility;
+	var height = document.getElementById(id).style.height;
+
+	if (toggle == 0) {
+		visibility = "hidden";
+		height = "0px";
+	}
+	else {
+		visibility = "visible";
+		height = "auto";
+	}
+
+	document.getElementById(id).style.visibility = visibility;
+	document.getElementById(id).style.height = height;
+}				
 /*
 	Home Page: 
 		changeColor(color) method
@@ -43,7 +58,9 @@ var players = [{name:"John Doe", img: "../resources/img/player1.jpg", alt:"Image
 			purpose: This method will set the html body's background color to the 
 					 provided parameter.
 */
-
+function changeColor(color) {
+	document.body.style.backgroundColor = color;
+}
 
 /*
 	Football Season Stats Page:
@@ -61,7 +78,31 @@ var players = [{name:"John Doe", img: "../resources/img/player1.jpg", alt:"Image
 						
 						4. Update the second table to show the total number of wins/losses for the Buffs.
 */
+function loadStatsPage() {
+	var table = document.getElementById("stats_table");
+	var wins = 0;
+	var losses = 0;
+	var row;
+	var wins_cell = document.getElementById("wins");
+	var losses_cell = document.getElementById("losses");
 
+	for (row = 2; row < table.rows.length; row++) {
+		if (table.rows[row].cells[2].innerHTML > table.rows[row].cells[3].innerHTML) {
+			table.rows[row].cells[4].innerHTML = "Buffs!";
+			wins++;
+		}
+		else if (table.rows[row].cells[2] == table.rows[row].cells[3]) {
+			table.rows[row].cells[4].innerHTML = "Tie";
+		}
+		else {
+			table.rows[row].cells[4].innerHTML = table.rows[row].cells[1].innerHTML;
+			losses++;
+		}
+	}
+
+	wins_cell.innerHTML = wins;
+	losses_cell.innerHTML = losses;
+}
 /*
 	Football Player Information Page
 		loadPlayersPage method:
@@ -104,5 +145,32 @@ var players = [{name:"John Doe", img: "../resources/img/player1.jpg", alt:"Image
 					  avg_r_yards   - the average number of rushing yards for the player's Buff career
 					  avg_rec_yards - the average number of receiving yards for the player's Buff career
 */
-				
+function loadPlayersPage() {
+	var sel = document.getElementById('player_selector');
+	var player;
+	for (player = 0; player<players.length; player++) {
+		var opt = document.createElement("div");
+		var link = document.createElement("a");
+		link.href = "#";
+		link.innerHTML = players[player].name;
+		var click = "switchPlayers("+player+")";
+		link.setAttribute('onclick', click);
+		opt.appendChild(link);
+		sel.appendChild(opt);
+	}
+}
+
+function switchPlayers(playerNum) {
+	document.getElementById("p_year").innerHTML = players[playerNum].year;
+	document.getElementById("p_major").innerHTML = players[playerNum].major;
+	document.getElementById("g_played").innerHTML = players[playerNum].games_played;
+	document.getElementById("player_img").src = players[playerNum].img;
+	document.getElementById("p_yards").innerHTML = players[playerNum].pass_yards;
+	document.getElementById("r_yards").innerHTML = players[playerNum].rushing_yards;
+	document.getElementById("rec_yards").innerHTML = players[playerNum].receiving_yards;
+
+	document.getElementById("avg_p_yards").innerHTML = players[playerNum].pass_yards / players[playerNum].games_played;
+	document.getElementById("avg_r_yards").innerHTML = players[playerNum].rushing_yards / players[playerNum].games_played;
+	document.getElementById("avg_rec_yards").innerHTML = players[playerNum].receiving_yards / players[playerNum].games_played;
+}
 
